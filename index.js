@@ -32,9 +32,6 @@ function iconfontCSS(config) {
 	}, config);
 
 	// Enable default stylesheet generators
-	if(!config.path) {
-		config.path = 'scss';
-	}
 	if(/^(scss|less|css)$/i.test(config.path)) {
 		config.path = __dirname + '/templates/_icons.' + config.path;
 	}
