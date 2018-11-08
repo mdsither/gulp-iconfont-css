@@ -1,6 +1,7 @@
 'use strict';
 
 var path = require('path'),
+	fs = require('fs'),
 	gutil = require('gulp-util'),
 	consolidate = require('consolidate'),
 	_ = require('lodash'),
@@ -28,12 +29,27 @@ function iconfontCSS(config) {
 		fixedCodepoints: false,
 		cssClass: 'icon',
 		aliases: {},
-		cacheBuster: ''
+		cacheBuster: '',
+		customTemplatePath: null
 	}, config);
 
 	// Enable default stylesheet generators
 	if(/^(scss|less|css)$/i.test(config.path)) {
 		config.path = __dirname + '/templates/_icons.' + config.path;
+	}
+
+	// Enable custom template path stylesheet generator
+	if (config.customTemplatePath) {
+		// Validate custom template path exists and is a file
+		if (validateCustomTemplate(config.customTemplatePath)) {
+			config.path = config.customTemplatePath;
+		} else {
+			throw new gutil.PluginError(
+				PLUGIN_NAME,
+				'Custom template file "' + config.customTemplatePath + '" does not exist or is not a file.',
+				{ showStack: true }
+			);
+		}
 	}
 
 	// Validate config
@@ -148,5 +164,17 @@ function iconfontCSS(config) {
 
 	return stream;
 };
+
+function validateCustomTemplate(path) {
+	try {
+		return fs.statSync(path).isFile();
+	} catch (e) {
+		if (e.code === 'ENOENT') {
+			return false;
+		} else {
+			throw new gutil.PluginError(PLUGIN_NAME, e, { showStack: true });
+		}
+	}
+}
 
 module.exports = iconfontCSS;

@@ -85,3 +85,8 @@ Type: `String`
 A string that will be appended to fonts URLs as query string (optional, defaults to the emtpy string, i.e. no cache buster).
 Query string heading questing mark `?` is included automatically.
 Useful to dodge HTTP cache when deploying a modified iconfont.
+
+#### options.customTemplatePath
+Type: `String`
+
+The path to the custom template to use instead of the defaulted `'scss'`, `'less'`, or `'css'` templates provided in [templates](templates).  See [custom template](templates/_custom.scss).

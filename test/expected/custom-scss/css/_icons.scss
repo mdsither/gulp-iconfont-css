@@ -1,0 +1,14 @@
+@font-face {
+	font-family: super-custom-font-name;
+	src:
+		url('../fonts/super-custom-font-name.ttf') format('truetype'),
+		url('../fonts/super-custom-font-name.woff') format('woff'),
+		url('../fonts/super-custom-font-name.woff2') format('woff2'),
+		url('../fonts/super-custom-font-name.svg#super-custom-font-name') format('svg');
+}
+
+$icons: (
+  'github': '\E001',
+  'git': '\E001',
+  'twitter': '\E002',
+);

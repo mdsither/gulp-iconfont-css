@@ -1,0 +1,12 @@
+@font-face {
+	font-family: <%= fontName %>;
+	src:
+		url('<%= fontPath %><%= fontName %>.ttf<%= cacheBusterQueryString %>') format('truetype'),
+		url('<%= fontPath %><%= fontName %>.woff<%= cacheBusterQueryString %>') format('woff'),
+		url('<%= fontPath %><%= fontName %>.woff2<%= cacheBusterQueryString %>') format('woff2'),
+		url('<%= fontPath %><%= fontName %>.svg<%= cacheBusterQueryString %>#<%= fontName %>') format('svg');
+}
+
+$icons: (
+<% _.each(glyphs, function(glyph, i) {%>  '<%= glyph.fileName %>': '\<%= glyph.codePoint %>',
+<% }); %>);
