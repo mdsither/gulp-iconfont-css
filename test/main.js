@@ -21,7 +21,8 @@ function run(type, dest, options) {
 			targetPath: '../css/_icons.' + type,
 			fontPath: '../fonts/',
 			cssClass: 'custom-icon',
-			aliases: aliases
+			aliases: aliases,
+			customTemplatePath: null
 		}, options);
 
 	return gulp.src(__dirname + '/fixtures/icons/*.svg')
@@ -29,7 +30,7 @@ function run(type, dest, options) {
 			console.log(err);
 		}))
 		.pipe(iconfont({
-			fontName: fontName,
+			fontName: config.fontName,
 			formats: ['woff2', 'woff', 'svg'],
 			timestamp: 1438703262
 		}))
@@ -140,6 +141,42 @@ function testCacheBuster() {
 	});
 }
 
+function testCustomTemplate(type, name) {
+	it('should generate "' + name + '" font files and "_icons.' + type + '" file based on custom "' + type + '" template provided', function(done) {
+		var dest = resultsDir + '_custom_' + type;
+
+		var customOptions = {
+			customTemplatePath: './templates/_custom.scss',
+			fontName: name
+		};
+
+		run(type, dest, customOptions)
+			.pipe(es.wait(function() {
+				assert.equal(
+					fs.readFileSync(dest + '/css/_icons.' + type, 'utf8'),
+					fs.readFileSync(__dirname + '/expected/custom-scss/css/_icons.' + type, 'utf8')
+				);
+
+				assert.equal(
+					fs.readFileSync(dest + '/fonts/' + name + '.woff2', 'utf8'),
+					fs.readFileSync(__dirname + '/expected/custom-scss/fonts/super-custom-font-name.woff2', 'utf8')
+				);
+
+				assert.equal(
+					fs.readFileSync(dest + '/fonts/' + name + '.woff', 'utf8'),
+					fs.readFileSync(__dirname + '/expected/custom-scss/fonts/super-custom-font-name.woff', 'utf8')
+				);
+
+				assert.equal(
+					fs.readFileSync(dest + '/fonts/' + name + '.svg', 'utf8'),
+					fs.readFileSync(__dirname + '/expected/custom-scss/fonts/super-custom-font-name.svg', 'utf8')
+				);
+
+				cleanUp(dest, done);
+			}));
+	});
+}
+
 
 describe('gulp-iconfont-css', function() {
 	testType('scss', 'SCSS');
@@ -149,4 +186,6 @@ describe('gulp-iconfont-css', function() {
 	testCodepointFirst();
 	testCodepointFixed();
 	testCacheBuster();
+
+	testCustomTemplate('scss', 'super-custom-font-name');
 });
